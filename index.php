@@ -1,6 +1,6 @@
 <h1>Object-Oriented Programming</h1>
 <?php
-$cat = new Cat('米漿', '玳瑁','踏踏');
+$cat = new Cat('米漿', '玳瑁', '踏踏');
 echo $cat->getName();
 echo $cat->getColor();
 echo $cat->getCute();
@@ -16,7 +16,7 @@ class Animal
     protected $type = 'animal';
     protected $name = 'John';
     protected $hair_color = "brown";
-    
+
     // public function __construct()
     public function __construct($type, $name, $color)
     // public function __construct($name, $color)
@@ -43,7 +43,8 @@ class Animal
         return $this->hair_color;
     }
 
-    public function getCute(){
+    public function getCute()
+    {
         return $this->cute;
     }
 
@@ -67,8 +68,8 @@ class Animal
 class Cat extends Animal
 {
     // 放宣告在 class Cat 內，父層 class Animal 會叫不到，平層 class Dog 也叫不到
-    public $cute; 
-    public function __construct($name, $color,$cute)
+    public $cute;
+    public function __construct($name, $color, $cute)
     {
         // parent::__construct($name, $color); // 先執行完建構式的東西
         // $this->type = '貓';
@@ -89,6 +90,27 @@ class Dog extends Animal
         $this->type = '狗';
     }
 }
+echo "<hr>";
+$car = new Car(55);
+// echo $car->getColor();
+echo $car->addColor('Green')->addColor('紫色')->addColor('Orange')->getColor();
 
+class Car
+{
+    protected $color = 'Yellow';
+    public function __construct($color)
+    {
+        $this->color = $color;
+    }
+    function getColor()
+    {
+        return $this->color;
+    }
 
+    function addColor($color){
+        $this->color=$this->color."+".$color;
+        return $this;
+
+    }
+}
 ?>
