@@ -1,29 +1,29 @@
 <?php
 
-$student = new DB('students');
-// $student->count();
-// count($table);
-// var_dump($student);
-function dd($array)
+$Student = new DB('students');
+$Dept = new DB('dept');
+
+echo $Dept->find(2)->name;
+
+function prr($Arr)
 {
     echo "<pre>";
-    print_r($array);
+    print_r($Arr);
     echo "</pre>";
 }
 
-// echo "<pre>";
-// print_r($student->all(['id'=>5,'id'=>100]));
-// // print_r($student->all());
-// echo "</pre>";
+$john = $Student->find(30);
+echo is_object($john);
+// prr($john);
+// echo $john->name;
+// echo $john->parents;
 
-// dd($student->all(['graduate_at' => 2, 'dept' => 2]));
-// $stus=$student->all([ 'id' => 200 , 'id' => 100 ]);
-// foreach($stus as $stu){
-// echo $stu['tel'];
-// }
-
-// dd($student->insert(['name' => '下大雨', 'graduate_at' => 2, 'dept' => 2]));
-dd($student->del(['name' => '下大雨']));
+echo "<br>";
+$stus = $Student->all(['dept' => 3]);
+foreach ($stus as $stu) {
+    // echo $stu['parents'] . "=>" . $stu['dept'];
+    echo "<br>";
+}
 
 
 class DB
@@ -44,12 +44,12 @@ class DB
         $sql = "SELECT * FROM `$this->table` ";  // $sql = "SELECT * FROM `$table` ";
 
         if (isset($args)) {
-            // dd($args);
+            // prr($args);
             if (is_array($args[0])) {
                 foreach ($args[0] as $key => $value) {
                     $tmp[] = "`$key`='$value'";
                 }
-                // dd($tmp);
+                // prr($tmp);
                 $sql = $sql . " WHERE " . join(" AND ", $tmp);
             } else {
                 $sql = $sql . $args[0];
@@ -64,12 +64,35 @@ class DB
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Find
+    public function find($factor)
+    {
+        // global $pdo;
+        $sql = "SELECT * FROM `$this->table` ";
+        if (is_array($factor)) {
+            foreach ($factor as $key => $value) {
+                $find[] = "`$key`='$value'";
+            }
+            $sql .= " WHERE " . join(" AND ", $find);
+        } else {
+            $sql .= " WHERE `id` = '$factor'";
+        }
+        echo $sql;
+        // return $this->$pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $row = $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
+        $date = new stdClass;
+        foreach ($row as $col => $value) {
+            $date->{$col} = $value;
+        }
+        return $date;
+    }
+
     public function insert($insert)
     {
         // global $pdo;
         $sql = "INSERT INTO `$this->table` ";
         if (is_array($insert)) {
-            dd($insert);
+            prr($insert);
             $keys = [];
             $values = [];
             foreach ($insert as $key => $value) {
@@ -86,29 +109,29 @@ class DB
     }
 
     public function del(...$args)
-{
-    global $pdo;
-    $sql = "DELETE FROM `$this->table` ";
+    {
+        global $pdo;
+        $sql = "DELETE FROM `$this->table` ";
 
-    if (isset($args)) {
-        if (is_array($args[0])) {
-            $tmp = [];
-            foreach ($args[0] as $key => $value) {
-                $tmp[] = "`$key`='$value'";
+        if (isset($args)) {
+            if (is_array($args[0])) {
+                $tmp = [];
+                foreach ($args[0] as $key => $value) {
+                    $tmp[] = "`$key`='$value'";
+                }
+                $sql = $sql . " WHERE " . join(" AND ", $tmp);
             }
-            $sql = $sql . " WHERE " . join(" AND ", $tmp);
-        } 
-        // elseif (is_numeric($args[0])) {
-        //     print_r($args[0]);
-        //     $sql = $sql . " LIMIT " . $args[0];
-        //     // echo $sql;
-        // } 
-        else {
-            // 是字串
-            $sql .= " WHERE `id`='{$args[0]}'";
+            // elseif (is_numeric($args[0])) {
+            //     print_r($args[0]);
+            //     $sql = $sql . " LIMIT " . $args[0];
+            //     // echo $sql;
+            // } 
+            else {
+                // 是字串
+                $sql .= " WHERE `id`='{$args[0]}'";
+            }
         }
+        echo $sql;
+        return $this->pdo->exec($sql);
     }
-    echo $sql;
-    return $this->pdo->exec($sql);
-}
 }
