@@ -174,11 +174,12 @@ class DB
         return $this->pdo->query($sql)->fetchColumn();
     }
 
-    // Free 
-    function free($sql)
-    {
-        $dsn = "mysql:host=localhost;charest=utf8;dbname=school";
-        $pdo = new PDO($dsn, 'root', '');
-        return $pdo->query($sql)->fetchAll();
-    }
+}
+
+// Free 
+function free($sql)
+{
+    $dsn = "mysql:host=localhost;charest=utf8;dbname=school";
+    $pdo = new PDO($dsn, 'root', '');
+    return $pdo->query($sql)->fetchAll();
 }
