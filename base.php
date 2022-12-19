@@ -151,7 +151,7 @@ class DB
         if (isset($save['id'])) {
             // Update
             // // Can't be Constraint
-            $id=$this->arrayToSqlArray($save);
+            $id = $this->arrayToSqlArray($save);
             unset($save['id']);
             // foreach ($save as $key => $value) {
             //     if ($key !== 'id') {
@@ -298,7 +298,7 @@ class DB
                 // foreach ($args[0] as $key => $value) {
                 //     $smmaWhere[] = "`$key`='$value'";
                 // }
-                $sql .= join(" AND ", $this->arrayToSqlArray($args[0]));
+                $sql .= join(" AND ", $this->arrayToSqlArray($args)[0][0]);
             } else {
                 $sql .= $args;
             }
@@ -306,5 +306,13 @@ class DB
 
         echo $sql;
         return $this->pdo->query($sql)->fetchColumn();
+    }
+
+    // Free 
+    function free($sql)
+    {
+        $dsn = "mysql:host=localhost;charest=utf8;dbname=school";
+        $pdo = new PDO($dsn, 'root', '');
+        return $pdo->query($sql)->fetchAll();
     }
 }
